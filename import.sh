@@ -1,5 +1,5 @@
 #!/bin/bash
-for dir in ../8260_code/chapter02*-calendar
+for dir in ../8260_code/*-calendar
 do
   branch=$(basename $dir)
   echo "branch = $branch"
