@@ -8,4 +8,5 @@ do
   git add .
   git ci -m "$branch"
   git checkout master
+  rm -rf src target 2> /dev/null
 done
