@@ -4,7 +4,7 @@ do
   branch=$(basename $dir)
   echo "branch = $branch"
   git checkout -b $branch
-  cp -rv $dir .
+  cp -rv $dir/* .
   git add .
   git ci -m "$branch"
   git checkout master
