@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,6 +7,7 @@
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
         <c:url var="cssUrl" value="/resources/css/bootstrap.css"/>
         <link href="${cssUrl}" rel="stylesheet"/>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
         <style>
           body {
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -38,10 +40,26 @@
                 </div>
                 <div id="nav-account" class="nav-collapse pull-right">
                     <ul class="nav">
-                       <c:url var="logoutUrl" value="/logout"/>
-                       <li>
-                          <a href="${logoutUrl}">Logout</a>
-                       </li>
+                       <sec:authorize access="authenticated" var="authenticated"/>
+                       <c:choose>
+                         <c:when test="${authenticated}">
+                           <li id="greeting">
+                             <div>
+                               Welcome, <sec:authentication property="name"/>
+                             </div>
+                           </li>
+                             <c:url var="logoutUrl" value="/logout"/>
+                             <li>
+                                <a id="navLogoutLink" href="${logoutUrl}">Logout</a>
+                             </li>
+                         </c:when>
+                         <c:otherwise>
+                           <c:url var="loginUrl" value="/login/form"/>
+                             <li>
+                                <a id="navLoginLink" href="${loginUrl}">Login</a>
+                             </li>                       
+                         </c:otherwise>
+                       </c:choose>
                     </ul>
                 </div>
             </div>

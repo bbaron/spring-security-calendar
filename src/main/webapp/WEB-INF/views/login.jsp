@@ -27,6 +27,22 @@
     <input type="password" id="password" name="password"/>
     <div class="form-actions">
         <input id="submit" class="btn" name="submit" type="submit" value="Login"/>
+        <input id="admin1" class="btn" name="admin1" type="submit" value="Login as Admin1"/>
+        <input id="user1" class="btn" name="user1" type="submit" value="Login as User1"/>
+        <input id="nobody" class="btn" name="nobody" type="submit" value="Login as Nobody"/>
     </div>
 </form>
 <jsp:include page="./includes/footer.jsp"/>
+        <script type="text/javascript">
+        $(document).ready(function() {
+        	  var populate = function(name) { return function() {
+                  $('#username').attr({value: name + '@example.com'});
+                  $('#password').attr({value: name});
+                  return false;
+        	        };
+                };
+            $('#admin1').bind('click', populate('admin1'));
+            $('#user1').bind('click', populate('user1'));
+            $('#nobody').bind('click', populate('nobody'));
+       });
+        </script>
