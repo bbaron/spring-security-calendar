@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.packtpub.springsecurity.core.userdetails.CalendarUserDetails;
 import com.packtpub.springsecurity.domain.CalendarUser;
 
 @Component
@@ -20,8 +19,8 @@ public class SpringSecurityUserContext implements UserContext {
         if (auth == null) {
             return null;
         }
-        CalendarUserDetails principal = (CalendarUserDetails) auth.getPrincipal();
-        return principal.getCalendarUser();
+        CalendarUser principal = (CalendarUser) auth.getPrincipal();
+        return principal;
     }
 
     private SecurityContext securityContext() {
