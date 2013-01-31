@@ -49,6 +49,14 @@
           name="user1@example.com"
           password="user1" />
         <user
+          authorities="ROLE_USER"
+          name="user2@example.com"
+          password="user2" />
+        <user
+          authorities="ROLE_USER"
+          name="user3@example.com"
+          password="user3" />
+        <user
           authorities="ROLE_USER,ROLE_ADMIN"
           name="admin1@example.com"
           password="admin1" />
