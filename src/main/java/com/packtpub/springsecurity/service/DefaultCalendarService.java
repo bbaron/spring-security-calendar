@@ -3,26 +3,30 @@ package com.packtpub.springsecurity.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Repository;
 
-import com.packtpub.springsecurity.dataaccess.EventDao;
 import com.packtpub.springsecurity.dataaccess.CalendarUserDao;
-import com.packtpub.springsecurity.domain.Event;
+import com.packtpub.springsecurity.dataaccess.EventDao;
 import com.packtpub.springsecurity.domain.CalendarUser;
+import com.packtpub.springsecurity.domain.Event;
 
 /**
- * A default implementation of {@link CalendarService} that delegates to {@link EventDao} and {@link CalendarUserDao}.
- *
+ * A default implementation of {@link CalendarService} that delegates to
+ * {@link EventDao} and {@link CalendarUserDao}.
+ * 
  * @author Rob Winch
- *
+ * 
  */
 @Repository
 public class DefaultCalendarService implements CalendarService {
     private final EventDao eventDao;
     private final CalendarUserDao userDao;
+    private UserDetailsManager userDetailsManager;
 
     @Autowired
-    public DefaultCalendarService(EventDao eventDao, CalendarUserDao userDao) {
+    public DefaultCalendarService(EventDao eventDao, CalendarUserDao userDao, UserDetailsManager udm) {
         if (eventDao == null) {
             throw new IllegalArgumentException("eventDao cannot be null");
         }
@@ -31,6 +35,7 @@ public class DefaultCalendarService implements CalendarService {
         }
         this.eventDao = eventDao;
         this.userDao = userDao;
+        this.userDetailsManager = udm;
     }
 
     public Event getEvent(int eventId) {
@@ -61,7 +66,13 @@ public class DefaultCalendarService implements CalendarService {
         return userDao.findUsersByEmail(partialEmail);
     }
 
-    public int createUser(CalendarUser user) {
-        return userDao.createUser(user);
+    public CalendarUser createUser(CalendarUser user) {
+        UserDetails userDetails = user.createSpringUser();
+        // create a Spring Security user
+        userDetailsManager.createUser(userDetails);
+        int userId = userDao.createUser(user);
+        user.setId(userId);
+        return user;
     }
+
 }

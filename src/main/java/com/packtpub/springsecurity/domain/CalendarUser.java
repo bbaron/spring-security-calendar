@@ -1,8 +1,13 @@
 package com.packtpub.springsecurity.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * {@link CalendarUser} is this applications notion of a user. It is good to use your own objects to interact with a
@@ -99,6 +104,13 @@ public class CalendarUser implements Serializable {
     public String getName() {
         return getLastName() + ", " + getFirstName();
     }
+    
+    public UserDetails createSpringUser() {
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+        UserDetails userDetails = new User(getEmail(), getPassword(), authorities);
+        return userDetails;
+    }
+
 
     // --- override Object ---
 

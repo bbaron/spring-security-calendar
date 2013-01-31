@@ -52,7 +52,7 @@ public interface CalendarService {
      * @throws IllegalArgumentException
      *             if {@link CalendarUser#getId()} is non-null.
      */
-    int createUser(CalendarUser user);
+    CalendarUser createUser(CalendarUser user);
 
     /**
      * Given an id gets an {@link Event}.

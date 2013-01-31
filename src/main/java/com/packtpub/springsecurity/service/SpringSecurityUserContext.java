@@ -1,9 +1,11 @@
 package com.packtpub.springsecurity.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -37,15 +39,18 @@ public class SpringSecurityUserContext implements UserContext {
         }
         CalendarUser result = calendarService.findUserByEmail(email);
         if (result == null) {
-            throw new IllegalStateException(
-                    "Spring Security is not in synch with CalendarUsers. Could not find user with email " + email);
+            throw new IllegalStateException("Spring Security is not in synch with CalendarUsers. Could not find user with email "
+                    + email);
         }
         return result;
     }
 
     @Override
     public void setCurrentUser(CalendarUser user) {
-        throw new UnsupportedOperationException();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, user.getPassword(),
+                userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

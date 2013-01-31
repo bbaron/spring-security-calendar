@@ -1,6 +1,5 @@
 package com.packtpub.springsecurity.web.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -42,14 +41,14 @@ public class SignupController {
         return "signup/form";
     }
 
-    @RequestMapping(value="/signup/new",method=RequestMethod.POST)
+    @RequestMapping(value = "/signup/new", method = RequestMethod.POST)
     public String signup(@Valid SignupForm signupForm, BindingResult result, RedirectAttributes redirectAttributes) {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return "signup/form";
         }
 
         String email = signupForm.getEmail();
-        if(calendarService.findUserByEmail(email) != null) {
+        if (calendarService.findUserByEmail(email) != null) {
             result.rejectValue("email", "errors.signup.email", "Email address is already in use.");
             return "signup/form";
         }
@@ -60,7 +59,9 @@ public class SignupController {
         user.setLastName(signupForm.getLastName());
         user.setPassword(signupForm.getPassword());
 
-        redirectAttributes.addFlashAttribute("message", "TODO we will implement signup later in the chapter");
+        user = calendarService.createUser(user);
+        userContext.setCurrentUser(user);
+        redirectAttributes.addFlashAttribute("message", "Success");
         return "redirect:/";
     }
 }
