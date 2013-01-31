@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * {@link CalendarUser} is this applications notion of a user. It is good to use your own objects to interact with a
@@ -17,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Rob Winch
  *
  */
-public class CalendarUser implements Serializable {
+public class CalendarUser implements Serializable, AppUsernamePassword {
     private Integer id;
     private String firstName;
     private String lastName;
@@ -32,6 +33,12 @@ public class CalendarUser implements Serializable {
      */
     public String getEmail() {
         return email;
+    }
+    
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return getEmail();
     }
 
     /**
@@ -67,6 +74,7 @@ public class CalendarUser implements Serializable {
      *
      * @return
      */
+    @Override
     @JsonIgnore
     public String getPassword() {
         return password;
@@ -101,6 +109,7 @@ public class CalendarUser implements Serializable {
      * @return
      */
     @JsonIgnore
+    @Override
     public String getName() {
         return getLastName() + ", " + getFirstName();
     }

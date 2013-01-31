@@ -3,8 +3,6 @@ package com.packtpub.springsecurity.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Repository;
 
 import com.packtpub.springsecurity.dataaccess.CalendarUserDao;
@@ -23,10 +21,9 @@ import com.packtpub.springsecurity.domain.Event;
 public class DefaultCalendarService implements CalendarService {
     private final EventDao eventDao;
     private final CalendarUserDao userDao;
-    private UserDetailsManager userDetailsManager;
 
     @Autowired
-    public DefaultCalendarService(EventDao eventDao, CalendarUserDao userDao, UserDetailsManager udm) {
+    public DefaultCalendarService(EventDao eventDao, CalendarUserDao userDao) {
         if (eventDao == null) {
             throw new IllegalArgumentException("eventDao cannot be null");
         }
@@ -35,7 +32,6 @@ public class DefaultCalendarService implements CalendarService {
         }
         this.eventDao = eventDao;
         this.userDao = userDao;
-        this.userDetailsManager = udm;
     }
 
     public Event getEvent(int eventId) {
@@ -67,9 +63,6 @@ public class DefaultCalendarService implements CalendarService {
     }
 
     public CalendarUser createUser(CalendarUser user) {
-        UserDetails userDetails = user.createSpringUser();
-        // create a Spring Security user
-        userDetailsManager.createUser(userDetails);
         int userId = userDao.createUser(user);
         user.setId(userId);
         return user;

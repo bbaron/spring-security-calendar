@@ -45,7 +45,7 @@
                          <c:when test="${authenticated}">
                            <li id="greeting">
                              <div>
-                               Welcome, <sec:authentication property="name"/>
+                               Welcome, <sec:authentication property="principal.firstName"/>
                              </div>
                            </li>
                              <c:url var="logoutUrl" value="/logout"/>

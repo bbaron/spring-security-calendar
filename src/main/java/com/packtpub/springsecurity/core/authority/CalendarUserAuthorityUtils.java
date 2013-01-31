@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
+import com.packtpub.springsecurity.domain.AppUsernamePassword;
 import com.packtpub.springsecurity.domain.CalendarUser;
 
 /**
@@ -20,8 +21,8 @@ public final class CalendarUserAuthorityUtils {
             "ROLE_USER");
     private static final List<GrantedAuthority> USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER");
 
-    public static Collection<? extends GrantedAuthority> createAuthorities(CalendarUser calendarUser) {
-        String username = calendarUser.getEmail();
+    public static Collection<? extends GrantedAuthority> createAuthorities(AppUsernamePassword calendarUser) {
+        String username = calendarUser.getUsername();
         if (username.startsWith("admin")) {
             return ADMIN_ROLES;
         }

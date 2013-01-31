@@ -38,33 +38,14 @@
       login-processing-url="/login"
       username-parameter="username"
       password-parameter="password"
-      authentication-failure-url="/login/form?error" 
-      default-target-url="/default"/>
-    <access-denied-handler error-page="/errors/403"/>
+      authentication-failure-url="/login/form?error"
+      default-target-url="/default" />
+    <access-denied-handler error-page="/errors/403" />
     <logout
       logout-url="/logout"
       logout-success-url="/login/form?logout" />
   </http>
   <authentication-manager>
-    <authentication-provider>
-      <user-service>
-        <user
-          authorities="ROLE_USER"
-          name="user1@example.com"
-          password="user1" />
-        <user
-          authorities="ROLE_USER"
-          name="user2@example.com"
-          password="user2" />
-        <user
-          authorities="ROLE_USER"
-          name="user3@example.com"
-          password="user3" />
-        <user
-          authorities="ROLE_USER,ROLE_ADMIN"
-          name="admin1@example.com"
-          password="admin1" />
-      </user-service>
-    </authentication-provider>
+    <authentication-provider user-service-ref="calendarUserDetailsService" />
   </authentication-manager>
 </beans:beans>

@@ -1,56 +1,43 @@
 package com.packtpub.springsecurity.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import static com.packtpub.springsecurity.core.authority.CalendarUserAuthorityUtils.*;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
+import com.packtpub.springsecurity.core.userdetails.CalendarUserDetails;
 import com.packtpub.springsecurity.domain.CalendarUser;
 
 @Component
 public class SpringSecurityUserContext implements UserContext {
 
-    private final CalendarService calendarService;
-    private final UserDetailsService userDetailsService;
-
-    @Autowired
-    public SpringSecurityUserContext(CalendarService calendarService, UserDetailsService userDetailsService) {
-        Assert.notNull(userDetailsService);
-        Assert.notNull(calendarService);
-        this.calendarService = calendarService;
-        this.userDetailsService = userDetailsService;
-    }
-
     @Override
     public CalendarUser getCurrentUser() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        if (authentication == null) {
+        Authentication auth = securityContext().getAuthentication();
+        if (auth == null) {
             return null;
         }
-        String email = authentication.getName();
-        if (email == null) {
-            return null;
-        }
-        CalendarUser result = calendarService.findUserByEmail(email);
-        if (result == null) {
-            throw new IllegalStateException("Spring Security is not in synch with CalendarUsers. Could not find user with email "
-                    + email);
-        }
-        return result;
+        CalendarUserDetails principal = (CalendarUserDetails) auth.getPrincipal();
+        return principal.getCalendarUser();
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContextHolder.getContext();
     }
 
     @Override
     public void setCurrentUser(CalendarUser user) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, user.getPassword(),
-                userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (user == null) {
+            throw new IllegalArgumentException("user cannot be null");
+        }
+        securityContext().setAuthentication(newAuthentication(user));
+    }
+
+    private UsernamePasswordAuthenticationToken newAuthentication(CalendarUser user) {
+        return new UsernamePasswordAuthenticationToken(user, user.getPassword(), createAuthorities(user));
     }
 
 }
