@@ -54,10 +54,10 @@
                              </li>
                          </c:when>
                          <c:otherwise>
+                           <c:url var="signupUrl" value="/signup/form"/>
+                           <li><a id="navSignupLink" href="${signupUrl}">Signup</a></li>
                            <c:url var="loginUrl" value="/login/form"/>
-                             <li>
-                                <a id="navLoginLink" href="${loginUrl}">Login</a>
-                             </li>                       
+                           <li><a id="navLoginLink" href="${loginUrl}">Login</a></li>                       
                          </c:otherwise>
                        </c:choose>
                     </ul>
