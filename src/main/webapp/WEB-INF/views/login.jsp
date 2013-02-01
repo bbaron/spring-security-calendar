@@ -23,6 +23,8 @@
     </c:if>
     <label for="username">Username</label>
     <input type="text" id="username" name="username"/>
+    <label for="domain">Domain</label> 
+    <input type="text" id="domain" name="domain"/>
     <label for="password">Password</label>
     <input type="password" id="password" name="password"/>
     <div class="form-actions">
@@ -40,7 +42,8 @@
         <script type="text/javascript">
         $(document).ready(function() {
             $('input.test-user').click(function() {
-                $('#username').val(this.id + '@example.com');
+                $('#username').val(this.id);
+                $('#domain').val('example.com');
                 $('#password').val(this.id);
             });
        });
